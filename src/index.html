@@ -1,46 +1,54 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <style>
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        background-color: #f4f4f4;
-      }
-      .poem-box {
-        font-family: "Amiri", serif; /* يفضل استخدام خط عربي رصين */
-        font-size: 1.8rem;
-        line-height: 2.5;
-        padding: 30px;
-        border-right: 5px solid #8b0000;
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      .line {
-        display: block;
-        margin-bottom: 10px;
-      }
-      .shatr {
-        display: inline-block;
-        min-width: 300px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="poem-box">
-      <div class="line">
-        <span class="shatr">فَلَمَّا أَنَخْنَا رَكَزْنَا الرِّمَاحَ</span>
-        <span class="shatr">فَوْقَ مَكَارِمِنَا وَالْعُلَا</span>
-      </div>
+<!DOCTYPE html>
+<html lang="en">
 
-      <div class="line">
-        <span class="shatr">وَبِتْنَا نُقَبِّلُ أَسْيَافَنَا</span>
-        <span class="shatr">وَنَمْسَحُهَا مِنْ دِمَاءِ الْعِدَا</span>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+</head>
+
+<body>
+  <div class="metricSlider">
+    <div class="metricTemp">
+      Celisus
+    </div>
+    <div class="USTemp">
+      US
+    </div>
+  </div>
+
+  <main>
+
+    <form id="weatherDataRequestFormElement">
+      <div>
+        <input type="text" name="cityName" placeholder="City Name..." id="cityNameInputElement">
+      </div>
+      <input type="submit" value="Get Weather Data">
+    </form>
+    <div class="weatherDataViewContainerElement">
+      <div class="westSide">
+        <span class="temp">
+          70
+        </span>
+      </div>
+      <div class="eastSide">
+        <ul>
+          <li>
+            Feels like: <span class="feelsLike">50</span>
+          </li>
+          <li>
+            Wind Speed: <span class="windSpeed">25mph</span>
+          </li>
+          <li>
+            Humidity: <span class="humidity">23</span>
+          </li>
+          <li>
+            UV index: <span class="UVIndex">2.9</span>
+          </li>
+        </ul>
       </div>
     </div>
-  </body>
+  </main>
+</body>
+
 </html>

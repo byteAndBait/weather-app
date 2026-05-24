@@ -19,7 +19,100 @@ body {
     "Open Sans",
     "Helvetica Neue",
     sans-serif;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("https://images.unsplash.com/photo-1458682625221-3a45f8a844c7?ixlib=rb-0.3.5&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ&s=71fe1cccc16ab8dbd431de076c68802b");
 }
-h1 {
+ul {
+  list-style: none;
+}
+/* Main Element Styling */
+main {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+
+main .weatherDataViewContainerElement {
+  display: flex;
+  gap: 40px;
+  margin-top: 20px;
+  color: white;
+}
+main .weatherDataViewContainerElement .temp {
+  font-size: 5rem;
+  position: relative;
+}
+main .weatherDataViewContainerElement .temp::after {
+  content: "°";
+}
+main .weatherDataViewContainerElement .temp::before {
+  content: "";
+  position: absolute;
+  right: -20px;
+  background-color: black;
+  width: 1px;
+  height: 100%;
+}
+
+main .weatherDataViewContainerElement .eastSide {
+  font-size: 1.25rem;
+}
+
+.metricSlider {
+  --border-radius: 25px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  background-color: black;
+  border-radius: var(--border-radius);
+  gap: 5px;
+  padding: 5px;
+}
+.metricSlider > div {
+  width: 70px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: var(--border-radius);
   text-align: center;
+  background-color: white;
+}
+
+/* Form Styling */
+main #weatherDataRequestFormElement {
+  width: 100%;
+  display: grid;
+  align-items: center;
+}
+main #weatherDataRequestFormElement #cityNameInputElement {
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+  border-radius: 25px;
+  padding: 5px 10px;
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+
+  &::placeholder {
+    color: white;
+  }
+  &:focus {
+    outline-color: transparent;
+  }
+}
+
+main #weatherDataRequestFormElement input[type="submit"] {
+  margin: 10px auto;
+  position: relative;
+  padding: 10px;
+  border-radius: 25px;
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  font-size: 18px;
+  letter-spacing: 0.8px;
+  cursor: pointer;
 }
