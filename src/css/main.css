@@ -21,10 +21,16 @@ body {
     sans-serif;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url("https://images.unsplash.com/photo-1458682625221-3a45f8a844c7?ixlib=rb-0.3.5&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ&s=71fe1cccc16ab8dbd431de076c68802b");
 }
 ul {
   list-style: none;
+}
+.glass {
+  background-color: #c8c8c82c;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  box-shadow: 1px 1px 5px 1px #13131354;
+  border: 1px solid #e9e9e94f;
 }
 /* Main Element Styling */
 main {
@@ -92,8 +98,7 @@ main #weatherDataRequestFormElement #cityNameInputElement {
   margin: 0 auto;
   border-radius: 25px;
   padding: 5px 10px;
-  background: transparent;
-  border: 2px solid white;
+
   color: white;
 
   &::placeholder {
@@ -109,8 +114,7 @@ main #weatherDataRequestFormElement input[type="submit"] {
   position: relative;
   padding: 10px;
   border-radius: 25px;
-  background: transparent;
-  border: 2px solid white;
+
   color: white;
   font-size: 18px;
   letter-spacing: 0.8px;

@@ -1,20 +1,10 @@
 import "./css/main.css";
 import "./css/normalize.css";
-
-
-const weatherDataRequestFormElement = document.getElementById("weatherDataRequestFormElement")
-const cityNameInputElement = weatherDataRequestFormElement.querySelector("input#cityNameInputElement")
-
-const weatherDataViewContainerElement = document.querySelector(".weatherDataViewContainerElement")
-const tempratureSpanElement = weatherDataViewContainerElement.querySelector(".temp")
-const feelsLikeSpanElement = weatherDataViewContainerElement.querySelector(".feelsLike")
-const windSpeedSpanElement = weatherDataViewContainerElement.querySelector(".windSpeed")
-const humiditySpanElement = weatherDataViewContainerElement.querySelector(".humidity")
-const UVIndexSpanElement = weatherDataViewContainerElement.querySelector(".UVIndex")
+import { initUI } from "./UI.js";
 
 
 async function getWeatherData(location) {
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=PFRUTATJUHH72C7DVKLTZX2V6`
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=PFRUTATJUHH72C7DVKLTZX2V6&lang=id`
     try {
         const response = await fetch(url)
         const responseInJSON = await response.json()
@@ -25,7 +15,7 @@ async function getWeatherData(location) {
     }
 }
 
-async function processWeatherData(location) {
+export async function processWeatherData(location) {
     const dataInJSON = await getWeatherData(location)
     if (dataInJSON) {
         console.log(dataInJSON.currentConditions)
@@ -34,25 +24,13 @@ async function processWeatherData(location) {
     console.log("there was an error")
 }
 
-weatherDataRequestFormElement.addEventListener("submit", async () => {
-    event.preventDefault()
-    if (cityNameInputElement.value.length < 1) {
-        console.log("Monsiuer your input is empty")
-        return;
-    }
-    const currentConditionWeatherObject = await processWeatherData(cityNameInputElement.value)
-    updateScreen(
-        currentConditionWeatherObject
-    )
-})
+initUI()
 
 
-function updateScreen(weatherObject) {
-    console.log(weatherObject)
-    tempratureSpanElement.textContent = weatherObject.temp
-    feelsLikeSpanElement.textContent = weatherObject.feelslike
-    windSpeedSpanElement.textContent = weatherObject.windspeed
-    humiditySpanElement.textContent = weatherObject.humidity
-    UVIndexSpanElement.textContent = weatherObject.uvindex
-    cityNameInputElement.value = ""
-}
+// TODO : Add weather background
+// "conditions": ["Partially cloudy", "Rain, Partially cloudy", "Clear", "Overcast", "Rain, Overcast"],
+// Use ID for multiple languages on Visual Crossing API
+/*
+    IDs for condistions
+   
+ */
