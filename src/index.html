@@ -8,11 +8,11 @@
 </head>
 
 <body>
-  <div class="metricSlider">
-    <div class="metricTemp">
+  <div class="metricSlider glass">
+    <div class="metricTemp temp glass">
       Celisus
     </div>
-    <div class="USTemp">
+    <div class="USTemp glass temp active">
       US
     </div>
   </div>
@@ -21,29 +21,36 @@
 
     <form id="weatherDataRequestFormElement">
       <div>
-        <input type="text" name="cityName" placeholder="City Name..." class="glass" id="cityNameInputElement">
+        <input type="text" value="Egypt" name="cityName" placeholder="City Name..." class="glass"
+          id="cityNameInputElement">
       </div>
       <input type="submit" value="Get Weather Data" class="glass">
     </form>
     <div class="weatherDataViewContainerElement">
+      <div class="overlay glass">
+        Enter a country name to get started
+      </div>
       <div class="westSide">
         <span class="temp">
-          70
+
         </span>
+      </div>
+      <div class="pane glass">
+
       </div>
       <div class="eastSide">
         <ul>
           <li>
-            Feels like: <span class="feelsLike">50</span>
+            Feels like: <span class="feelsLike"></span>
           </li>
           <li>
-            Wind Speed: <span class="windSpeed">25mph</span>
+            Wind Speed: <span class="windSpeed"></span>
           </li>
           <li>
-            Humidity: <span class="humidity">23</span>
+            Humidity: <span class="humidity"></span>
           </li>
           <li>
-            UV index: <span class="UVIndex">2.9</span>
+            UV index: <span class="UVIndex"></span>
           </li>
         </ul>
       </div>

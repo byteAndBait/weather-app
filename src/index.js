@@ -26,11 +26,3 @@ export async function processWeatherData(location) {
 
 initUI()
 
-
-// TODO : Add weather background
-// "conditions": ["Partially cloudy", "Rain, Partially cloudy", "Clear", "Overcast", "Rain, Overcast"],
-// Use ID for multiple languages on Visual Crossing API
-/*
-    IDs for condistions
-   
- */

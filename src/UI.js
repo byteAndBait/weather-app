@@ -10,6 +10,9 @@ const feelsLikeSpanElement = weatherDataViewContainerElement.querySelector(".fee
 const windSpeedSpanElement = weatherDataViewContainerElement.querySelector(".windSpeed")
 const humiditySpanElement = weatherDataViewContainerElement.querySelector(".humidity")
 const UVIndexSpanElement = weatherDataViewContainerElement.querySelector(".UVIndex")
+
+const metricSliderElement = document.querySelector(".metricSlider")
+
 const conditionsIDs = {
     "type_1": "Blowing Or Drifting Snow",
     "type_2": "Drizzle",
@@ -55,8 +58,9 @@ const conditionsIDs = {
     "type_42": "Partially cloudy",
     "type_43": "Clear",
 };
-export function initUI() {
+export async function initUI() {
     formEventsHandler()
+    metricSliderEventHandler()
     document.body.style.backgroundImage = `url("${earthBackgroundImage}")`
 
 }
@@ -80,12 +84,35 @@ function formEventsHandler() {
             console.log(e.message)
         }
 
+        if (metricSliderElement.querySelector(".active").classList.contains("metricTemp")) {
+            updateTempUnitSystem()
+        }
+        if (weatherDataViewContainerElement.querySelector(".overlay")) {
+            weatherDataViewContainerElement.querySelector(".overlay").remove()
+        }
+
+
     })
 }
-
+function metricSliderEventHandler() {
+    document.querySelector(".metricSlider").addEventListener("click", () => {
+        const target = event.target
+        if (!target.classList.contains("temp")) { // To make sure it updates only when buttons are pressed
+            return;
+        }
+        if (target.classList.contains("active")) {
+            return;
+        }
+        metricSliderElement.querySelector(".active").classList.remove("active")
+        target.classList.add("active")
+        updateTempUnitSystem()
+    })
+}
 async function updateScreen(weatherObject) {
     tempratureSpanElement.textContent = weatherObject.temp
+    tempratureSpanElement.dataset.temp = weatherObject.temp
     feelsLikeSpanElement.textContent = weatherObject.feelslike
+    feelsLikeSpanElement.dataset.temp = weatherObject.feelslike
     windSpeedSpanElement.textContent = weatherObject.windspeed
     humiditySpanElement.textContent = weatherObject.humidity
     UVIndexSpanElement.textContent = weatherObject.uvindex
@@ -103,3 +130,46 @@ async function getPhotoFromUnsplash(keyword) {
         console.log("there was an error " + error.message)
     }
 }
+
+
+function convertToCelsius(fahrenheit) {
+    const celsuis = parseFloat((fahrenheit - 32) / 1.8)
+    if (isNaN(celsuis)) return ""
+    if (Math.floor(celsuis) == celsuis) {
+        return Math.floor(celsuis)
+    }
+    return celsuis
+}
+function convertToFahrenheit(celsuis) {
+    const fahrenheit = parseFloat((celsuis * 1.8) + 32)
+    if (isNaN(fahrenheit)) return ""
+    if (Math.floor(fahrenheit) == fahrenheit) {
+        return Math.floor(fahrenheit)
+    }
+    return fahrenheit
+}
+
+function updateTempUnitSystem() {
+    if (metricSliderElement.querySelector(".active")) {
+        if (!(tempratureSpanElement.dataset.temp && feelsLikeSpanElement.dataset.temp)) {
+            return
+        }
+        const currentUnitSystemElement = metricSliderElement.querySelector(".active")
+        if (currentUnitSystemElement.classList.contains("USTemp")) {
+            tempratureSpanElement.dataset.temp = convertToFahrenheit(tempratureSpanElement.dataset.temp)
+            feelsLikeSpanElement.dataset.temp = convertToFahrenheit(feelsLikeSpanElement.dataset.temp)
+            tempratureSpanElement.textContent = parseFloat(tempratureSpanElement.dataset.temp).toFixed(1)
+            feelsLikeSpanElement.textContent = parseFloat(feelsLikeSpanElement.dataset.temp).toFixed(1)
+            return;
+        }
+        if (currentUnitSystemElement.classList.contains("metricTemp")) {
+            document.querySelector(".USTemp").classList.remove("active")
+            tempratureSpanElement.dataset.temp = convertToCelsius(tempratureSpanElement.dataset.temp)
+            feelsLikeSpanElement.dataset.temp = convertToCelsius(feelsLikeSpanElement.dataset.temp)
+            tempratureSpanElement.textContent = parseFloat(tempratureSpanElement.dataset.temp).toFixed(1)
+            feelsLikeSpanElement.textContent = parseFloat(feelsLikeSpanElement.dataset.temp).toFixed(1)
+            return
+        }
+    }
+}
+

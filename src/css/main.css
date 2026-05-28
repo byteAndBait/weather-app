@@ -42,28 +42,30 @@ main {
 
 main .weatherDataViewContainerElement {
   display: flex;
-  gap: 40px;
+  justify-content: space-between;
+  width: 400px;
   margin-top: 20px;
+  position: relative;
   color: white;
 }
 main .weatherDataViewContainerElement .temp {
   font-size: 5rem;
-  position: relative;
 }
 main .weatherDataViewContainerElement .temp::after {
   content: "°";
 }
-main .weatherDataViewContainerElement .temp::before {
-  content: "";
-  position: absolute;
-  right: -20px;
-  background-color: black;
-  width: 1px;
-  height: 100%;
-}
 
 main .weatherDataViewContainerElement .eastSide {
   font-size: 1.25rem;
+}
+
+main .weatherDataViewContainerElement .overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  display: grid;
+  place-items: center;
 }
 
 .metricSlider {
@@ -72,7 +74,6 @@ main .weatherDataViewContainerElement .eastSide {
   top: 10px;
   left: 10px;
   display: flex;
-  background-color: black;
   border-radius: var(--border-radius);
   gap: 5px;
   padding: 5px;
@@ -83,7 +84,13 @@ main .weatherDataViewContainerElement .eastSide {
   cursor: pointer;
   border-radius: var(--border-radius);
   text-align: center;
+  transition: 300ms ease;
+  background-color: black;
+  color: white;
+}
+.metricSlider > div.active {
   background-color: white;
+  color: black;
 }
 
 /* Form Styling */
