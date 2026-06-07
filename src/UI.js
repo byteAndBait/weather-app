@@ -1,10 +1,11 @@
-import { processWeatherData } from "./index.js"
+import { getWeatherData } from "./index.js"
 import earthBackgroundImage from "./assets/images/nasa-earth.jpg"
 
 const weatherDataRequestFormElement = document.getElementById("weatherDataRequestFormElement")
 const cityNameInputElement = weatherDataRequestFormElement.querySelector("input#cityNameInputElement")
 
 const weatherDataViewContainerElement = document.querySelector(".weatherDataViewContainerElement")
+const locationAddressElement = weatherDataViewContainerElement.querySelector(".locationAddress")
 const tempratureSpanElement = weatherDataViewContainerElement.querySelector(".temp")
 const feelsLikeSpanElement = weatherDataViewContainerElement.querySelector(".feelsLike")
 const windSpeedSpanElement = weatherDataViewContainerElement.querySelector(".windSpeed")
@@ -13,6 +14,8 @@ const UVIndexSpanElement = weatherDataViewContainerElement.querySelector(".UVInd
 
 const metricSliderElement = document.querySelector(".metricSlider")
 
+const glassyOverlay = weatherDataViewContainerElement.querySelector(".overlay")
+const loaderComponentElement = glassyOverlay.querySelector(".loader")
 const conditionsIDs = {
     "type_1": "Blowing Or Drifting Snow",
     "type_2": "Drizzle",
@@ -62,7 +65,8 @@ export async function initUI() {
     formEventsHandler()
     metricSliderEventHandler()
     document.body.style.backgroundImage = `url("${earthBackgroundImage}")`
-
+    glassyOverlay.querySelector(".text").textContent = "Enter a country name to get started"
+    loaderComponentElement.classList.add("hidden")
 }
 
 function formEventsHandler() {
@@ -73,23 +77,30 @@ function formEventsHandler() {
             return;
         }
         try {
-            const currentConditionWeatherObject = await processWeatherData(cityNameInputElement.value)
-            const backgroundImageName = conditionsIDs[currentConditionWeatherObject.conditions]
+            glassyOverlay.querySelector(".text").textContent = ""
+            glassyOverlay.classList.remove("hidden")
+            loaderComponentElement.classList.remove("hidden")
+            const weatherObject = await getWeatherData(cityNameInputElement.value)
+            const currentConditionWeatherObject = weatherObject.currentConditions
+            const conditions = currentConditionWeatherObject.conditions.replaceAll(" ", "").split(",")
+            const backgroundImageName = conditionsIDs[conditions[0]]
             const backgroundImageURL = await getPhotoFromUnsplash(backgroundImageName)
             document.body.style.backgroundImage = `url("${backgroundImageURL}")`
             updateScreen(
-                currentConditionWeatherObject
+                weatherObject
             )
+            glassyOverlay.classList.add("hidden")
+            loaderComponentElement.classList.add("hidden")
+
         } catch (e) {
-            console.log(e.message)
+            glassyOverlay.querySelector(".text").textContent = e.message
+            loaderComponentElement.remove("hidden")
         }
 
         if (metricSliderElement.querySelector(".active").classList.contains("metricTemp")) {
             updateTempUnitSystem()
         }
-        if (weatherDataViewContainerElement.querySelector(".overlay")) {
-            weatherDataViewContainerElement.querySelector(".overlay").remove()
-        }
+
 
 
     })
@@ -109,13 +120,14 @@ function metricSliderEventHandler() {
     })
 }
 async function updateScreen(weatherObject) {
-    tempratureSpanElement.textContent = weatherObject.temp
-    tempratureSpanElement.dataset.temp = weatherObject.temp
-    feelsLikeSpanElement.textContent = weatherObject.feelslike
-    feelsLikeSpanElement.dataset.temp = weatherObject.feelslike
-    windSpeedSpanElement.textContent = weatherObject.windspeed
-    humiditySpanElement.textContent = weatherObject.humidity
-    UVIndexSpanElement.textContent = weatherObject.uvindex
+    locationAddressElement.textContent = weatherObject.address 
+    tempratureSpanElement.textContent = weatherObject.currentConditions.temp
+    tempratureSpanElement.dataset.temp = weatherObject.currentConditions.temp
+    feelsLikeSpanElement.textContent = weatherObject.currentConditions.feelslike
+    feelsLikeSpanElement.dataset.temp = weatherObject.currentConditions.feelslike
+    windSpeedSpanElement.textContent = weatherObject.currentConditions.windspeed
+    humiditySpanElement.textContent = weatherObject.currentConditions.humidity
+    UVIndexSpanElement.textContent = weatherObject.currentConditions.uvindex
     cityNameInputElement.value = ""
 
 }
