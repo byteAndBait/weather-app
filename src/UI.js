@@ -94,7 +94,8 @@ function formEventsHandler() {
 
         } catch (e) {
             glassyOverlay.querySelector(".text").textContent = e.message
-            loaderComponentElement.remove("hidden")
+            glassyOverlay.classList.remove("hidden")
+            loaderComponentElement.classList.add("hidden")
         }
 
         if (metricSliderElement.querySelector(".active").classList.contains("metricTemp")) {
