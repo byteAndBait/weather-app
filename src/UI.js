@@ -1,21 +1,22 @@
 import { getWeatherData } from "./index.js"
 import earthBackgroundImage from "./assets/images/nasa-earth.jpg"
-
-const weatherDataRequestFormElement = document.getElementById("weatherDataRequestFormElement")
-const cityNameInputElement = weatherDataRequestFormElement.querySelector("input#cityNameInputElement")
-
-const weatherDataViewContainerElement = document.querySelector(".weatherDataViewContainerElement")
-const locationAddressElement = weatherDataViewContainerElement.querySelector(".locationAddress")
-const tempratureSpanElement = weatherDataViewContainerElement.querySelector(".temp")
-const feelsLikeSpanElement = weatherDataViewContainerElement.querySelector(".feelsLike")
-const windSpeedSpanElement = weatherDataViewContainerElement.querySelector(".windSpeed")
-const humiditySpanElement = weatherDataViewContainerElement.querySelector(".humidity")
-const UVIndexSpanElement = weatherDataViewContainerElement.querySelector(".UVIndex")
-
+// Inputs
+const weatherDataRequestFormElement = document.getElementById("weatherDataRequestForm")
+const cityNameInputElement = document.getElementById("cityNameInput")
+// Overview Element
+const weatherDataOverviewElement = document.querySelector(".weatherDataOverview")
+const locationAddressElement = weatherDataOverviewElement.querySelector(".locationAddress")
+const tempratureSpanElement = weatherDataOverviewElement.querySelector(".temp")
+const feelsLikeSpanElement = weatherDataOverviewElement.querySelector(".feelsLike")
+const windSpeedSpanElement = weatherDataOverviewElement.querySelector(".windSpeed")
+const humiditySpanElement = weatherDataOverviewElement.querySelector(".humidity")
+const UVIndexSpanElement = weatherDataOverviewElement.querySelector(".UVIndex")
+// Special Elements
 const metricSliderElement = document.querySelector(".metricSlider")
 
-const glassyOverlay = weatherDataViewContainerElement.querySelector(".overlay")
+const glassyOverlay = weatherDataOverviewElement.querySelector(".overlay")
 const loaderComponentElement = glassyOverlay.querySelector(".loader")
+
 const conditionsIDs = {
     "type_1": "Blowing Or Drifting Snow",
     "type_2": "Drizzle",
@@ -85,12 +86,18 @@ function formEventsHandler() {
             const conditions = currentConditionWeatherObject.conditions.replaceAll(" ", "").split(",")
             const backgroundImageName = conditionsIDs[conditions[0]]
             const backgroundImageURL = await getPhotoFromUnsplash(backgroundImageName)
-            document.body.style.backgroundImage = `url("${backgroundImageURL}")`
-            updateScreen(
-                weatherObject
-            )
-            glassyOverlay.classList.add("hidden")
-            loaderComponentElement.classList.add("hidden")
+            const downloadingImgTemp = new Image()
+            downloadingImgTemp.onload = () => {
+                document.body.style.backgroundImage = `url("${downloadingImgTemp.src}")`
+                updateScreen(
+                    weatherObject
+                )
+                glassyOverlay.classList.add("hidden")
+                loaderComponentElement.classList.add("hidden")
+            }
+            downloadingImgTemp.src = backgroundImageURL
+            document.body.append(downloadingImgTemp)
+            downloadingImgTemp.style.display = "none"
 
         } catch (e) {
             glassyOverlay.querySelector(".text").textContent = e.message
@@ -101,8 +108,6 @@ function formEventsHandler() {
         if (metricSliderElement.querySelector(".active").classList.contains("metricTemp")) {
             updateTempUnitSystem()
         }
-
-
 
     })
 }
@@ -121,7 +126,7 @@ function metricSliderEventHandler() {
     })
 }
 async function updateScreen(weatherObject) {
-    locationAddressElement.textContent = weatherObject.address 
+    locationAddressElement.textContent = weatherObject.address
     tempratureSpanElement.textContent = weatherObject.currentConditions.temp
     tempratureSpanElement.dataset.temp = weatherObject.currentConditions.temp
     feelsLikeSpanElement.textContent = weatherObject.currentConditions.feelslike
