@@ -11,11 +11,17 @@ const feelsLikeSpanElement = weatherDataOverviewElement.querySelector(".feelsLik
 const windSpeedSpanElement = weatherDataOverviewElement.querySelector(".windSpeed")
 const humiditySpanElement = weatherDataOverviewElement.querySelector(".humidity")
 const UVIndexSpanElement = weatherDataOverviewElement.querySelector(".UVIndex")
-// Special Elements
+
+// Unit Slider
 const metricSliderElement = document.querySelector(".metricSlider")
+const celsuisTempModeElement = metricSliderElement.querySelector(".metricTemp")
+const fahrenheitTempModeElement = metricSliderElement.querySelector(".USTemp")
+// Special Elements
 
 const glassyOverlay = weatherDataOverviewElement.querySelector(".overlay")
 const loaderComponentElement = glassyOverlay.querySelector(".loader")
+
+let currentUnitSystem = celsuisTempModeElement.dataset.temp
 
 const conditionsIDs = {
     "type_1": "Blowing Or Drifting Snow",
@@ -94,48 +100,43 @@ function formEventsHandler() {
                 )
                 glassyOverlay.classList.add("hidden")
                 loaderComponentElement.classList.add("hidden")
+                if (currentUnitSystem == celsuisTempModeElement.dataset.temp) {
+                    updateTemps()
+                }
             }
             downloadingImgTemp.src = backgroundImageURL
             document.body.append(downloadingImgTemp)
             downloadingImgTemp.style.display = "none"
-
         } catch (e) {
             glassyOverlay.querySelector(".text").textContent = e.message
             glassyOverlay.classList.remove("hidden")
             loaderComponentElement.classList.add("hidden")
         }
 
-        if (metricSliderElement.querySelector(".active").classList.contains("metricTemp")) {
-            updateTempUnitSystem()
-        }
-
     })
 }
 function metricSliderEventHandler() {
-    document.querySelector(".metricSlider").addEventListener("click", () => {
-        const target = event.target
-        if (!target.classList.contains("temp")) { // To make sure it updates only when buttons are pressed
-            return;
-        }
-        if (target.classList.contains("active")) {
+    document.querySelector(".metricSlider").addEventListener("click", (e) => {
+        const target = e.target
+        if (!target.classList.contains("temp") || target.classList.contains("active")) { // To make sure it updates only when buttons are pressed
             return;
         }
         metricSliderElement.querySelector(".active").classList.remove("active")
         target.classList.add("active")
-        updateTempUnitSystem()
+        currentUnitSystem = target.dataset.temp
+        updateTemps()
     })
 }
-async function updateScreen(weatherObject) {
+function updateScreen(weatherObject) {
     locationAddressElement.textContent = weatherObject.address
-    tempratureSpanElement.textContent = weatherObject.currentConditions.temp
     tempratureSpanElement.dataset.temp = weatherObject.currentConditions.temp
-    feelsLikeSpanElement.textContent = weatherObject.currentConditions.feelslike
+    tempratureSpanElement.textContent = tempratureSpanElement.dataset.temp
     feelsLikeSpanElement.dataset.temp = weatherObject.currentConditions.feelslike
+    feelsLikeSpanElement.textContent = feelsLikeSpanElement.dataset.temp
     windSpeedSpanElement.textContent = weatherObject.currentConditions.windspeed
     humiditySpanElement.textContent = weatherObject.currentConditions.humidity
     UVIndexSpanElement.textContent = weatherObject.currentConditions.uvindex
     cityNameInputElement.value = ""
-
 }
 async function getPhotoFromUnsplash(keyword) {
     const url = `https://api.unsplash.com/search/photos?client_id=PQz9bjVxY_rgaLbOSfWJbzDPfcf7BsWGBTxcIYWy-eA&query=${keyword.toLowerCase().trim()}`
@@ -167,27 +168,25 @@ function convertToFahrenheit(celsuis) {
     return fahrenheit
 }
 
-function updateTempUnitSystem() {
-    if (metricSliderElement.querySelector(".active")) {
-        if (!(tempratureSpanElement.dataset.temp && feelsLikeSpanElement.dataset.temp)) {
-            return
-        }
-        const currentUnitSystemElement = metricSliderElement.querySelector(".active")
-        if (currentUnitSystemElement.classList.contains("USTemp")) {
-            tempratureSpanElement.dataset.temp = convertToFahrenheit(tempratureSpanElement.dataset.temp)
-            feelsLikeSpanElement.dataset.temp = convertToFahrenheit(feelsLikeSpanElement.dataset.temp)
-            tempratureSpanElement.textContent = parseFloat(tempratureSpanElement.dataset.temp).toFixed(1)
-            feelsLikeSpanElement.textContent = parseFloat(feelsLikeSpanElement.dataset.temp).toFixed(1)
-            return;
-        }
-        if (currentUnitSystemElement.classList.contains("metricTemp")) {
-            document.querySelector(".USTemp").classList.remove("active")
-            tempratureSpanElement.dataset.temp = convertToCelsius(tempratureSpanElement.dataset.temp)
-            feelsLikeSpanElement.dataset.temp = convertToCelsius(feelsLikeSpanElement.dataset.temp)
-            tempratureSpanElement.textContent = parseFloat(tempratureSpanElement.dataset.temp).toFixed(1)
-            feelsLikeSpanElement.textContent = parseFloat(feelsLikeSpanElement.dataset.temp).toFixed(1)
-            return
-        }
+function updateTemps() {
+    console.log("Start udpateing temps")
+    console.log(tempratureSpanElement.dataset.temp)
+    console.log(feelsLikeSpanElement.dataset.temp)
+    if (!(tempratureSpanElement.dataset.temp && feelsLikeSpanElement.dataset.temp)) {
+        return
+    }
+    console.log("pass")
+    if (currentUnitSystem == celsuisTempModeElement.dataset.temp) {
+        console.log("C")
+        tempratureSpanElement.dataset.temp = convertToCelsius(tempratureSpanElement.dataset.temp)
+        feelsLikeSpanElement.dataset.temp = convertToCelsius(feelsLikeSpanElement.dataset.temp)
+        tempratureSpanElement.textContent = parseFloat(tempratureSpanElement.dataset.temp).toFixed(1)
+        feelsLikeSpanElement.textContent = parseFloat(feelsLikeSpanElement.dataset.temp).toFixed(1)
+    } else if (currentUnitSystem == fahrenheitTempModeElement.dataset.temp) {
+        console.log("f")
+        tempratureSpanElement.dataset.temp = convertToFahrenheit(tempratureSpanElement.dataset.temp)
+        feelsLikeSpanElement.dataset.temp = convertToFahrenheit(feelsLikeSpanElement.dataset.temp)
+        tempratureSpanElement.textContent = parseFloat(tempratureSpanElement.dataset.temp).toFixed(1)
+        feelsLikeSpanElement.textContent = parseFloat(feelsLikeSpanElement.dataset.temp).toFixed(1)
     }
 }
-
